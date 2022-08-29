@@ -4,5 +4,5 @@ namespace Billing.Application.Services;
 
 public interface IPaymentGateway
 {
-    Task<bool> ProcessPayment(Guid gatewayId, Money amount);
+    Task<(bool success, Guid paymentId)> ProcessPayment(PaymentModel payment);
 }

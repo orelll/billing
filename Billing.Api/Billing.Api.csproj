@@ -32,7 +32,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Billing.Core\Billing.Core.csproj" />
       <ProjectReference Include="..\Billing.Infrastructure.Sql\Billing.Infrastructure.Sql.csproj" />
       <ProjectReference Include="..\Billing.Shared\Billing.Shared.csproj" />
     </ItemGroup>

@@ -1,4 +1,5 @@
 using Billing.Api;
+using Billing.Api.ExtensionMethods;
 using Billing.Infrastructure.Sql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -15,6 +16,8 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddControllers();
 builder.Services.AddDbContext<OrdersDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Orders")));
+
+builder.Services.RegisterAppServices();
 
 var app = builder.Build();
 

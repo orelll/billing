@@ -3,7 +3,7 @@
 public class ResponseBase<T>
 {
     public T? Result { get; set; }
-    public string[] Errors { get; set; }
+    public string[] Errors { get; set; } = Array.Empty<string>();
 
     public ResponseBase()
     {

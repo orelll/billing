@@ -1,8 +1,10 @@
-﻿namespace Billing.Application.Responses;
+﻿using Billing.Shared.Dto;
 
-public class CreateIOrderResponse: ResponseBase<Guid>
+namespace Billing.Application.Responses;
+
+public class CreateIOrderResponse: ResponseBase<ReceiptViewModelDto>
 {
-    public CreateIOrderResponse(Guid orderId):base(orderId)
+    public CreateIOrderResponse(ReceiptViewModelDto receiptVM):base(receiptVM)
     {
         
     }    
@@ -12,5 +14,7 @@ public class CreateIOrderResponse: ResponseBase<Guid>
         
     }
 
-    public static CreateIOrderResponse Success(Guid orderId) => new CreateIOrderResponse(orderId);
+    public static CreateIOrderResponse Success(ReceiptViewModelDto receiptVM) => new CreateIOrderResponse(receiptVM);
+    public static CreateIOrderResponse WithErrors(IEnumerable<string> errors) => new CreateIOrderResponse(errors:errors.ToArray());
+    public static CreateIOrderResponse WithPaymentGatewayError() => new CreateIOrderResponse(errors: "Payment gateway returned error");
 }

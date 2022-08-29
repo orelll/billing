@@ -1,4 +1,6 @@
-﻿using Billing.Shared.Dto;
+﻿using Billing.Api.ExtensionMethods;
+using Billing.Application.Services;
+using Billing.Shared.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Billing.Api.Controllers;
@@ -8,6 +10,12 @@ namespace Billing.Api.Controllers;
 public class OrdersController : ControllerBase
 {
     private const string Route = "api/orders";
+    private readonly IBillingService _billingService;
+    
+    public OrdersController(IBillingService billingService)
+    {
+        _billingService = billingService;
+    }
     
     [HttpGet]
     [Produces("application/json")]
@@ -26,9 +34,12 @@ public class OrdersController : ControllerBase
     
     [HttpPost]
     [Produces("application/json")]
-    public async Task<IActionResult> NewOrder([FromBody] OrderDto order)
+    public async Task<IActionResult> NewOrder([FromBody] OrderDto order, CancellationToken token)
     {
-        return Ok();
+
+        var creationResponse = await _billingService.CreateOrder(order.ToOrderModel(), token);
+        
+        return Ok(creationResponse);
     }    
     
     [HttpDelete]
