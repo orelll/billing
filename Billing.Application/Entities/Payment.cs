@@ -9,4 +9,5 @@ public class Payment:Entity
     public string Currency { get; set; }
     public Order Order { get; set; }
     public int OrderId { get; set; }
+    public Guid GatewayPaymentId { get; set; }
 }

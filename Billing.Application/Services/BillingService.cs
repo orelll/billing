@@ -44,7 +44,7 @@ public class BillingService:IBillingService
             GatewayId = input.GatewayId
         };
         
-        var gatewayResponse = await _paymentGateway.ProcessPayment(paymentDetails);
+        var gatewayResponse = await _paymentGateway.ProcessPayment(paymentDetails, token);
 
         if (!gatewayResponse.success)
         {
@@ -57,7 +57,8 @@ public class BillingService:IBillingService
             Timestamp = DateTime.Now,
             DecimalPart = paymentDetails.DecimalPart,
             FullPart = paymentDetails.FullPart,
-            GatewayId = input.GatewayId
+            GatewayId = input.GatewayId,
+            GatewayPaymentId = gatewayResponse.paymentId
         };
 
         var order = new Order
@@ -74,8 +75,6 @@ public class BillingService:IBillingService
         await _dbContext.SaveChangesAsync(token);
  
         var receipt = _dbContext.Receipts.FirstOrDefault(rec => rec.OrderId == order.Id);
-
-
         
         return receipt != null ? CreateIOrderResponse.Success(new ReceiptViewModelDto
         {
@@ -86,5 +85,20 @@ public class BillingService:IBillingService
             PaymentGatewayId = payment.GatewayId,
             PaymentAmount = $"{payment.FullPart}.{payment.DecimalPart} {payment.Currency}"
         }) : CreateIOrderResponse.WithErrors(new []{"Receipt not found"});
+    }
+
+    public async Task<GetAllOrdersResponse> GetAll(CancellationToken token)
+    {
+        var all = _dbContext.Orders.Select(order => new OrderViewModel
+        {
+            Description = order.Description,
+            OrderNumber = order.OrderNumber,
+            PaymentId = order.PaymentId,
+            ReceiptId = order.ReceiptId,
+            UserId = order.UserId,
+            OrderId = order.Id
+        }).ToArray();
+
+        return GetAllOrdersResponse.Success(all);
     }
 }

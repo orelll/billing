@@ -8,4 +8,5 @@ public interface IBillingService
 {
     Task<ValidationResult> ValidateOrder(OrderModel order, CancellationToken token);
     Task<CreateIOrderResponse> CreateOrder(OrderModel input, CancellationToken token);
+    Task<GetAllOrdersResponse> GetAll(CancellationToken token);
 } 

@@ -4,6 +4,8 @@ namespace Billing.Application.Validators;
 
 public class OrderValidator:IValidator<OrderModel>
 {
+    private readonly List<string> _allowedCurrencies = new List<string> {"eur", "pln", "usd"};
+
     public async Task<ValidationResult> ValidateAsync(OrderModel input)
     {
         var validationErrors = new List<string>();
@@ -19,10 +21,14 @@ public class OrderValidator:IValidator<OrderModel>
         if (string.IsNullOrEmpty(input.Currency))
         {
             validationErrors.Add("Missing currency");
+        }            
+        if (!AllowedCurrency(input.Currency))
+        {
+            validationErrors.Add("Not supported currency");
         }        
         if (input.DecimalPart < 0 || input.FullPart < 0)
         {
-            validationErrors.Add("Payment data malfuinctioned");
+            validationErrors.Add("Payment data malfunctioned");
         }        
         if (input.GatewayId == Guid.Empty)
         {
@@ -33,4 +39,6 @@ public class OrderValidator:IValidator<OrderModel>
             ? ValidationResult.WithSuccess()
             : ValidationResult.WithErrors(validationErrors.ToArray()));
     }
+
+    private bool AllowedCurrency(string currency) => _allowedCurrencies.Any(c => c == currency.ToLower().Trim());
 }
